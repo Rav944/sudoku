@@ -1,38 +1,10 @@
 import pygame
 
-grid_1 = [[7, 3, 0, 4, 6, 5, 0, 0, 8],
-          [0, 0, 0, 3, 9, 2, 4, 0, 7],
-          [5, 0, 0, 0, 0, 0, 0, 6, 9],
-          [0, 0, 7, 0, 0, 0, 8, 4, 0],
-          [0, 5, 0, 8, 0, 4, 0, 3, 0],
-          [0, 9, 0, 2, 0, 3, 0, 0, 0],
-          [2, 0, 0, 0, 0, 9, 1, 0, 0],
-          [9, 0, 3, 5, 0, 0, 7, 0, 0],
-          [0, 8, 4, 7, 2, 0, 0, 0, 0]]
-
-grid_2 = [[3, 0, 6, 5, 0, 8, 4, 0, 0],
-          [5, 2, 0, 0, 0, 0, 0, 0, 0],
-          [0, 8, 7, 0, 0, 0, 0, 3, 1],
-          [0, 0, 3, 0, 1, 0, 0, 8, 0],
-          [9, 0, 0, 8, 6, 3, 0, 0, 5],
-          [0, 5, 0, 0, 9, 0, 6, 0, 0],
-          [1, 3, 0, 0, 0, 0, 2, 5, 0],
-          [0, 0, 0, 0, 0, 0, 0, 7, 4],
-          [0, 0, 5, 2, 0, 6, 3, 0, 0]]
-
-#
-# [[7, 8, 5, 4, 3, 9, 1, 2, 6],
-#  [6, 1, 2, 8, 7, 5, 3, 4, 9],
-#  [4, 9, 3, 6, 2, 1, 5, 7, 8],
-#  [8, 5, 7, 9, 4, 3, 2, 6, 1],
-#  [2, 6, 1, 7, 5, 8, 9, 3, 4],
-#  [9, 3, 4, 1, 6, 2, 7, 8, 5],
-#  [5, 7, 8, 3, 9, 4, 6, 1, 2],
-#  [1, 2, 6, 5, 8, 7, 4, 9, 3],
-#  [3, 4, 9, 2, 1, 6, 8, 5, 7]]
+from settings import CORRECT_SUMMARY, INCORRECT_SUMMARY
+from utils import redraw_window
 
 
-def solve(bo, redraw_window, win, play_time, strikes):
+def solve(bo, win: pygame.Surface, play_time: int, strikes: int) -> bool:
     find = find_empty(bo.board)
     if not find:
         return True
@@ -48,14 +20,14 @@ def solve(bo, redraw_window, win, play_time, strikes):
             bo.board[row][col] = i
             bo.update_model()
             redraw_window(win, bo, play_time, strikes)
-            pygame.draw.rect(win, pygame.Color("green"), (x, y, gap, gap), 3)
+            pygame.draw.rect(win, CORRECT_SUMMARY, (x, y, gap, gap), 3)
             pygame.display.update()
-            if solve(bo, redraw_window, win, play_time, strikes):
+            if solve(bo, win, play_time, strikes):
                 return True
 
             bo.cubes[row][col].set(0)
             bo.board[row][col] = 0
-            pygame.draw.rect(win, pygame.Color("red"), (x, y, gap, gap), 3)
+            pygame.draw.rect(win, INCORRECT_SUMMARY, (x, y, gap, gap), 3)
             bo.update_model()
             pygame.display.update()
 
